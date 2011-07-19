@@ -17,9 +17,9 @@ Class PoshSequence
    (free: setoids.Object → monoids.Object) `{!Fmap free}
    (inject: id ⇛ monoids.forget ∘ free)
    (extend: `((x ⟶ monoids.forget y) → (free x ⟶ y))): Prop :=
-   { sequence_adjunction: ηAdjunction _ _ inject extend
+   { sequence_adjunction: etaAdjunction _ _ inject extend
    ; extend_morphism: `(Setoid_Morphism (extend x y)) }.
-     (* todo: how come extend_morphism isn't part of ηAdjunction? *)
+     (* todo: how come extend_morphism isn't part of etaAdjunction? *)
 
 (* This looks very nice, but the encapsulation of the parameters makes it
 a bit awkward to work with. Hence, let us define a more down to earth

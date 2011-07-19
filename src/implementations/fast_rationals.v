@@ -42,9 +42,9 @@ Proof.
   change (n # d == 'n / (BigQ.Qz (BigZ.Pos d)))%bigQ.
   unfold BigQ.div, BigQ.inv.
   case_eq (BigZ.zero ?= BigZ.Pos d)%bigZ; intros Ed.
-    transitivity BigQ.zero; [| ring].
+    transitivity BigQ.zero; [ | ring].
     do 2 red. simpl.
-    case_eq (BigN.eq_bool d BigN.zero); intros Ed2; [reflexivity |].
+    case_eq (BigN.eq_bool d BigN.zero); intros Ed2; [reflexivity | ].
     rewrite BigZ.spec_compare in Ed.
     destruct (proj2 (not_true_iff_false _) Ed2).
     apply BigN.eqb_eq. symmetry. now apply Zcompare_Eq_eq.

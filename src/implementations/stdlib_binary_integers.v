@@ -38,7 +38,7 @@ Instance: ∀ x y : Z, Decision (x = y) := ZArith_dec.Z_eq_dec.
 Add Ring Z: (rings.stdlib_ring_theory Z).
 
 (* * Embedding N into Z *)
-Instance inject_N_Z: Cast BinNat.N Z := Z_of_N.
+Instance inject_N_Z: Cast N Z := Z_of_N.
 
 Instance: SemiRing_Morphism Z_of_N.
 Proof.
@@ -129,7 +129,7 @@ Qed.
 
 Instance: FullPseudoSemiRingOrder Z_le Z_lt.
 Proof.
-  rapply semirings.dec_full_pseudo_srorder.
+  rapply (semirings.dec_full_pseudo_srorder (A:=Z)).
   split.
    intro. split. now apply Zorder.Zlt_le_weak. now apply Zorder.Zlt_not_eq.
   intros [E1 E2]. destruct (Zorder.Zle_lt_or_eq _ _ E1). easy. now destruct E2.

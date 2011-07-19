@@ -88,6 +88,8 @@ Section another_rationals.
   Context `{Rationals Q1} `{Rationals Q2}.
 
   Global Instance: SemiRing_Morphism (rationals_to_rationals Q1 Q2) := {}.
+
+  Global Instance: Inverse (rationals_to_rationals Q1 Q2) := jections.inverse_comp _ _.
   Global Instance: Bijective (rationals_to_rationals Q1 Q2) := {}.
 
   Instance: Bijective (rationals_to_frac Q1 (SRpair nat)) := {}.

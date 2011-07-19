@@ -127,7 +127,8 @@ Proof.
   change (1 + cast N Z n ≠ 0).
   apply orders.lt_ne_flip.
   rewrite commutativity.
-  now apply integers.le_iff_lt_plus_1, naturals.to_semiring_nonneg.
+  apply integers.le_iff_lt_plus_1.
+  now apply naturals.to_semiring_nonneg.
 Qed.
 
 Instance Q_shiftl: ShiftL Q Z := λ x k,
