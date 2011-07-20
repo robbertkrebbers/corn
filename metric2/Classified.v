@@ -1,4 +1,5 @@
 
+
 (** MathClasses-style operational & structural classes for a Russell-style metric space (i.e. MetricSpace). 
   We don't put this in MathClasses because for reasons of interoperability with the existing MetricSpace 
   it is still bound to stdlib Q rather than an abstract Rationals implementation. *)
@@ -584,8 +585,8 @@ Section local_uniform_continuity.
    assert (x ∈ b).
     subst b. unfold In, ball_contains. simpl.
     apply (mspc_refl X)...
-   assert (y ∈ b).
-    rewrite <- H6...
+   assert (y ∈ b). SearchAbout In.
+    unfold In. unfold ball_contains. now rewrite <- H6.
    apply (uniformlyContinuous0 e (exist _ x H9) (exist _ y H10)).
    change (mspc_ball (uc_mu (restrict b f) e) x y).
    rewrite <- H6.

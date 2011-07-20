@@ -2,7 +2,7 @@ Require Import ZArith ARArith.
 
 Ltac AR_solve_pos_loop k :=
  (apply AR_epsilon_sign_dec_pos with k;
-  vm_compute;
+  native_compute;
   match goal with
   | |- Gt ≡ Gt => reflexivity
   | |- Lt ≡ Gt => fail 2 "AR number is negative"
@@ -18,7 +18,7 @@ Tactic Notation "AR_solve_ltT" constr(k) :=
 Tactic Notation "AR_solve_ltT" := AR_solve_ltT 0%Z.
 
 Ltac AR_solve_apartT_loop k :=
-  (apply AR_epsilon_sign_dec_apartT with k; vm_compute; discriminate) || AR_solve_apartT_loop (k - 8)%Z.
+  (apply AR_epsilon_sign_dec_apartT with k; native_compute; discriminate) || AR_solve_apartT_loop (k - 8)%Z.
 
 Tactic Notation "AR_solve_apartT" constr(k) := AR_solve_apartT_loop k.
 Tactic Notation "AR_solve_apartT" := AR_solve_apartT 0%Z.

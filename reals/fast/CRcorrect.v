@@ -62,7 +62,7 @@ Proof.
  apply Qle_trans with (((1 # P_of_succ_nat (pred (nat_of_P (2*ed)))) + (1 # 2 * ed)))%Q.
   apply: plus_resp_leEq.
   change (P_of_succ_nat (pred (nat_of_P (2*ed))) <= P_of_succ_nat m)%Z.
-  destruct (Z_lt_le_dec (P_of_succ_nat m)(P_of_succ_nat (pred (nat_of_P (2 * ed)))))%Z.
+  destruct (Z_lt_le_dec (P_of_succ_nat m)(P_of_succ_nat (pred (nat_of_P (2 * ed)))))%Z as [z|z].
    elim (le_not_lt _ _ Hm).
    apply surj_lt.
    repeat rewrite succ_nat in z.

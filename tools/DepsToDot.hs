@@ -1,5 +1,4 @@
 #! /usr/bin/env runhaskell
-
 {-# LANGUAGE UnicodeSyntax, ViewPatterns #-}
 {-# OPTIONS_GHC -Wall #-}
 
@@ -9,8 +8,11 @@ import Data.GraphViz
   (Attribute(..), Label(..), printDotGraph, nonClusteredParams, graphToDot, fmtNode, Color(..), X11Color(..))
 import Data.List (nub, elemIndex, isSuffixOf, isPrefixOf, stripPrefix)
 import Control.Monad (liftM2)
-import Data.Maybe (fromJust)
-
+import Data.Maybe
+import System
+import System.Exit
+import System.IO
+import System.Console.GetOpt
 import Prelude hiding ((.))
 
 (.) :: Functor f ⇒ (a → b) → (f a → f b)
@@ -45,13 +47,21 @@ read_deps input = mkGraph (zip [0..] nodes) edges
 cut_dotvo :: String → String
 cut_dotvo = dropBack 3
 
-label :: FilePath → [Attribute]
-label (stripPrefix "MathClasses/" → Just rest) = [Label (StrLabel (cut_dotvo rest))]
-label p =
-  [ Label (StrLabel (cut_dotvo p))
+-- strip to basename
+basename :: String → String
+basename = drop 1 . dropWhile (/= '/')
+
+coqDocURL :: String → FilePath → String
+coqDocURL base p = base
+  ++ map (\c -> if c == '/' then '.' else c) (cut_dotvo p)
+  ++ ".html"
+
+attributes :: Options → FilePath → [Attribute]
+attributes opts p =
+  [ Label (StrLabel (basename $ cut_dotvo label))
   , Color [X11Color color]
   , LabelFontColor (X11Color color)
-  ]
+  ] ++ maybe [] (\base -> [URL (coqDocURL base p)]) (optCoqDocBase opts)
   where
     color :: X11Color
     color
@@ -70,12 +80,59 @@ label p =
       | "order/" `isPrefixOf` p = Orange
       | "coq_reals/" `isPrefixOf` p = OliveDrab
       | otherwise = Black
+    label = case stripPrefix "MathClasses/" p of
+      Just rest -> cut_dotvo rest
+      Nothing -> cut_dotvo p
 
-main :: IO ()
-main = interact $
-  printDotGraph .
+makeGraph :: Options -> String -> String
+makeGraph opts = printDotGraph .
   graphToDot (nonClusteredParams {fmtNode = snd}) .
-  nmap label .
+  nmap (attributes opts).
   untransitive .
   nfilter (isSuffixOf ".vo" . snd) .
   read_deps
+
+data Options = Options { 
+  optCoqDocBase :: Maybe String, 
+  optInput :: IO String,
+  optOutput :: String -> IO ()
+}
+
+defaultOptions :: Options
+defaultOptions = Options { 
+  optCoqDocBase = Nothing, 
+  optInput = getContents,
+  optOutput = putStr
+}
+  
+options :: [OptDescr (Options -> IO Options)]
+options = [
+  Option [] ["coqdocbase"] (ReqArg (\arg opt -> 
+    return opt { optCoqDocBase = Just arg }) "URL") "coqdoc base path (include trailing slash)",
+  Option ['i'] ["input"] (ReqArg (\arg opt -> 
+    return opt { optInput = readFile arg }) "FILE") "input file, stdin if omitted",
+  Option ['o'] ["output"] (ReqArg (\arg opt -> 
+    return opt { optOutput = writeFile arg }) "FILE") "output file, stdout if omitted",
+  Option ['h'] ["help"] (NoArg (\_ -> 
+    usage >> exitSuccess)) "display this help page"]
+    
+usage :: IO ()
+usage = do
+  prg <- getProgName
+  hPutStrLn stderr $ usageInfo ("Usage: " ++ prg ++" [OPTION...]") options
+  hPutStrLn stderr "Use dot -Tsvg deps.dot -o deps.svg to render the graph"
+  hPutStrLn stderr $ replicate 30 ' ' ++ "This DepsToDot has Super Coq Powers."  
+            
+main :: IO ()
+main = do
+  argv <- getArgs
+  case getOpt Permute options argv of
+   (actions,_,[]) -> do
+     opts <- foldl (>>=) (return defaultOptions) actions
+     input <- optInput opts
+     optOutput opts $ makeGraph opts $ input
+   (_,_,errors) -> do
+     hPutStrLn stderr $ concat errors
+     usage
+     exitFailure
+

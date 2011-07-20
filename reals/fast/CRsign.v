@@ -34,7 +34,7 @@ by starting with approximating by e, and halving the allowed error until
 the problem is solved.  (This tactic may not terminate.) *)
 Ltac CR_solve_pos_loop e :=
  (exists e;
-  vm_compute;
+  native_compute;
   match goal with
   | |- Gt = Gt => reflexivity
   | |- Lt = Gt => fail 2 "CR number is negative"

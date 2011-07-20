@@ -13,7 +13,7 @@ Definition Qdlog2 (x : Q) : Z :=
 Instance: Proper (=) Qdlog2.
 Proof.
   intros ? ? E. unfold Qdlog2.
-  do 2 case (decide_rel _); rewrite E; intros; easy.
+  do 2 case (decide_rel _); intros ? E2; now rewrite E in E2 |- *.
 Qed.
 
 Lemma Qdlog2_spec (x : Q) : 
@@ -95,7 +95,8 @@ Lemma Qdlog2_0 (x : Q) :
   0 < x → Qdlog2 x = 0 → x < 2.
 Proof.
   intros ? E.
-  change (x < 2 ^ (1 + 0)). rewrite <-E.
+  change (x < 2 ^ (1 + 0 : Z)).
+  rewrite <-E. 
   now apply Qdlog2_spec.
 Qed.
 
@@ -267,7 +268,7 @@ Lemma Qdlog4_spec (x : Q) :
   0 < x → 4 ^ Qdlog4 x ≤ x ∧ x < 4 ^ (1 + Qdlog4 x).
 Proof.
   intros E1. unfold Qdlog4.
-  change (4:Q) with (2 ^ 2 : Q).
+  change (4:Q) with (2 ^ (2:Z) : Q).
   rewrite <-2!int_pow_exp_mult.
   split.
    etransitivity.

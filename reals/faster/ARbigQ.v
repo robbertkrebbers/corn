@@ -22,7 +22,7 @@ Lemma bigQ_approx_Q_approx (x : bigQ) (k : Z) :
   'app_approx x k = app_approx ('x) k.
 Proof.
   unfold app_approx, Q_approx, approximateQ, bigQ_approx.
-  destruct k as [|p|]; try reflexivity.
+  destruct k as [ |p| ]; try reflexivity.
   destruct x as [n|n d]; simpl.
    rewrite Z.div_1_r, Qmake_Qdiv. simpl.
    now rewrite Q.Zmult_Qmult, Qdiv_mult_l by auto with zarith.

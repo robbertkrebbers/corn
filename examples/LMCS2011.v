@@ -30,29 +30,31 @@ Definition dP08 : ARbigD := AQcos ('(10^50)%Z).
 
 Require Import String.
 
+(*
 Eval compute in "old"%string.
-Time Eval vm_compute in (eval 25 P01).
-Time Eval vm_compute in (eval 25 P02).
-Time Eval vm_compute in (eval 25 P03).
-Time Eval vm_compute in (eval 10 P04).
-Time Eval vm_compute in (eval 10 P05).
-Time Eval vm_compute in (eval 10 P07). 
-Time Eval vm_compute in (eval 25 P08).
+Time Eval native_compute in (eval 25 P01).
+Time Eval native_compute in (eval 25 P02).
+Time Eval native_compute in (eval 25 P03).
+Time Eval native_compute in (eval 10 P04).
+Time Eval native_compute in (eval 10 P05).
+Time Eval native_compute in (eval 10 P07). 
+Time Eval native_compute in (eval 25 P08).
+*)
 
 Eval compute in "new"%string.
-Time Eval vm_compute in (deval 25 dP01).
-Time Eval vm_compute in (deval 25 dP02).
-Time Eval vm_compute in (deval 25 dP03).
-Time Eval vm_compute in (deval 10 dP04).
-Time Eval vm_compute in (deval 10 dP05).
-Time Eval vm_compute in (deval 10 dP07).
-Time Eval vm_compute in (deval 25 dP08).
+Time Eval native_compute in (deval 25 dP01).
+Time Eval native_compute in (deval 25 dP02).
+Time Eval native_compute in (deval 25 dP03).
+Time Eval native_compute in (deval 10 dP04).
+Time Eval native_compute in (deval 10 dP05).
+Time Eval native_compute in (deval 10 dP07).
+Time Eval native_compute in (deval 25 dP08).
 
 Eval compute in "new bigger"%string.
-Time Eval vm_compute in (deval 500 dP01).
-Time Eval vm_compute in (deval 500 dP02).
-Time Eval vm_compute in (deval 500 dP03).
-Time Eval vm_compute in (deval 500 dP04).
-Time Eval vm_compute in (deval 500 dP05).
-Time Eval vm_compute in (deval 2000 dP07).
-Time Eval vm_compute in (deval 2000 dP08).
+Time Eval native_compute in (deval 500 dP01).
+Time Eval native_compute in (deval 500 dP02).
+Time Eval native_compute in (deval 500 dP03).
+Time Eval native_compute in (deval 500 dP04).
+Time Eval native_compute in (deval 500 dP05).
+Time Eval native_compute in (deval 2000 dP07).
+Time Eval native_compute in (deval 2000 dP08).

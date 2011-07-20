@@ -25,29 +25,29 @@ Let CRtest5 : CR := cos ('inject_Z (10^50)%Z).
 Let ARtest6 : ARbigD := ARsin (ARcompress (ARsin (ARcompress (AQsin 1)))).
 Let CRtest6 : CR := sin (compress (sin (compress (rational_sin (1#1))))).
 
-Time Eval vm_compute in (deval 300 ARtest1).
-Time Eval vm_compute in (eval 300 CRtest1).
-Time Eval vm_compute in (deval 2100 ARtest1).
+Time Eval native_compute in (deval 300 ARtest1).
+Time Eval native_compute in (eval 300 CRtest1).
+Time Eval native_compute in (deval 2100 ARtest1).
 
-Time Eval vm_compute in (deval 25 ARtest2).
-Time Eval vm_compute in (eval 25 CRtest2).
-Time Eval vm_compute in (deval 425 ARtest2).
+Time Eval native_compute in (deval 25 ARtest2).
+Time Eval native_compute in (eval 25 CRtest2).
+Time Eval native_compute in (deval 425 ARtest2).
 
-Time Eval vm_compute in (deval 25 ARtest3).
-Time Eval vm_compute in (eval 25 CRtest3).
-Time Eval vm_compute in (deval 425 ARtest3).
+Time Eval native_compute in (deval 25 ARtest3).
+Time Eval native_compute in (eval 25 CRtest3).
+Time Eval native_compute in (deval 425 ARtest3).
 
-Time Eval vm_compute in (deval 25 ARtest4).
-Time Eval vm_compute in (eval 25 CRtest4).
-Time Eval vm_compute in (deval 85 ARtest4).
+Time Eval native_compute in (deval 25 ARtest4).
+Time Eval native_compute in (eval 25 CRtest4).
+Time Eval native_compute in (deval 85 ARtest4).
 
-Time Eval vm_compute in (deval 40 ARtest5).
-Time Eval vm_compute in (eval 40 CRtest5).
-Time Eval vm_compute in (deval 3000 ARtest5).
+Time Eval native_compute in (deval 40 ARtest5).
+Time Eval native_compute in (eval 40 CRtest5).
+Time Eval native_compute in (deval 3000 ARtest5).
 
-Time Eval vm_compute in (deval 25 ARtest6).
-Time Eval vm_compute in (eval 25 CRtest6).
-Time Eval vm_compute in (deval 425 ARtest6).
+Time Eval native_compute in (deval 25 ARtest6).
+Time Eval native_compute in (eval 25 CRtest6).
+Time Eval native_compute in (deval 425 ARtest6).
 
 (* Finally, we compare our sqrt with an implementation not using type classes *)
 Require Import ARroot dyadics.
@@ -55,7 +55,7 @@ Require Import ARroot dyadics.
 Let n := Eval compute in (10 * 10 * 10 * 10)%nat.
 Let ARroot_test : nat -> bigD * bigD := AQsqrt_loop (a:=2).
 
-Time Eval vm_compute in (
+Time Eval native_compute in (
   (fun _ _ _ _ _ _ _ _ _ _ => true)
   (snd (ARroot_test n))
   (snd (ARroot_test n))
@@ -71,22 +71,22 @@ Time Eval vm_compute in (
 Require Import BigZ.
 Open Scope bigZ_scope.
 
-Definition BigD_0 : bigD := (0 $ 0).
-Definition BigD_1 : bigD := (1 $ 0).
-Definition BigD_2 : bigD := (2 $ 0).
-Definition BigD_4 : bigD := (4 $ 0).
+Definition BigD_0 : bigD := (0 ▼ 0).
+Definition BigD_1 : bigD := (1 ▼ 0).
+Definition BigD_2 : bigD := (2 ▼ 0).
+Definition BigD_4 : bigD := (4 ▼ 0).
 
 Definition BigD_plus (x y : bigD) : bigD := 
   match BigZ.compare (expo x) (expo y) with
-  | Gt => BigZ.shiftl (mant x) (expo x - expo y) + mant y $ BigZ.min (expo x) (expo y)
-  | _ => mant x + BigZ.shiftl (mant y) (expo y - expo x) $ BigZ.min (expo x) (expo y)
+  | Gt => BigZ.shiftl (mant x) (expo x - expo y) + mant y ▼ BigZ.min (expo x) (expo y)
+  | _ => mant x + BigZ.shiftl (mant y) (expo y - expo x) ▼ BigZ.min (expo x) (expo y)
   end.
 
-Definition BigD_opp (x : bigD) : bigD := -mant x $ expo x.
+Definition BigD_opp (x : bigD) : bigD := -mant x ▼ expo x.
 
-Definition BigD_mult (x y : bigD) : bigD := mant x * mant y $ expo x + expo y.
+Definition BigD_mult (x y : bigD) : bigD := mant x * mant y ▼ expo x + expo y.
 
-Definition BigD_shiftl (x : bigD) (n : bigZ) : bigD := mant x $ expo x + n.
+Definition BigD_shiftl (x : bigD) (n : bigZ) : bigD := mant x ▼ expo x + n.
 
 Definition BigD_compare (x y : bigD) : comparison := 
   match BigZ.compare (expo x) (expo y) with
@@ -104,7 +104,7 @@ Fixpoint root_loop_alt (x : bigD) (n : nat) : bigD * bigD :=
      end
   end.
 
-Time Eval vm_compute in (
+Time Eval native_compute in (
   (fun _ _ _ _ _ _ _ _ _ _ => true)
   (snd (root_loop_alt BigD_2 n))
   (snd (root_loop_alt BigD_2 n))
@@ -130,7 +130,7 @@ Fixpoint root_loop_alt_mult (x : bigD) (n : nat) : bigD * bigD :=
      end
   end.
 
-Time Eval vm_compute in (
+Time Eval native_compute in (
   (fun _ _ _ _ _ _ _ _ _ _ => true)
   (snd (root_loop_alt_mult BigD_2 n))
   (snd (root_loop_alt_mult BigD_2 n))

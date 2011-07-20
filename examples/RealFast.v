@@ -41,42 +41,42 @@ Definition answer (n:positive) (r:CR) : Z :=
 (* Here are some example approximations to real numbers *)
 
 (* approximate the integer 7 *)
-Time Eval vm_compute in answer 10 ('7)%CR.
+Time Eval native_compute in answer 10 ('7)%CR.
 (* approximate the rational 0.5 *)
-Time Eval vm_compute in answer 10 ('(1#2))%CR.
+Time Eval native_compute in answer 10 ('(1#2))%CR.
 (* approximate pi *)
-Time Eval vm_compute in answer 50 (CRpi)%CR.
+Time Eval native_compute in answer 50 (CRpi)%CR.
 (* approximate e *)
-Time Eval vm_compute in answer 50 (rational_exp 1)%CR.
+Time Eval native_compute in answer 50 (rational_exp 1)%CR.
 (* approximate e^-1 *)
-Time Eval vm_compute in answer 50 (rational_exp (-(1)))%CR.
+Time Eval native_compute in answer 50 (rational_exp (-(1)))%CR.
 (* approximate e^pi - pi.  May take a minute *)
-Time Eval vm_compute in answer 20 (exp (compress CRpi) - CRpi)%CR.
+Time Eval native_compute in answer 20 (exp (compress CRpi) - CRpi)%CR.
 
 (* The following expressions are taken from the
   Many Digits friendly competition practice set,
   which in turn are taken from the CCA 2000 competition *)
 (* sin (sin (sin(1))) *)
-Time Eval vm_compute in answer 20 (sin (compress (sin (compress (rational_sin 1)))))%CR.
+Time Eval native_compute in answer 20 (sin (compress (sin (compress (rational_sin 1)))))%CR.
 (* sqrt (pi) *)
-Time Eval vm_compute in answer 20 (CRsqrt (compress CRpi))%CR.
+Time Eval native_compute in answer 20 (CRsqrt (compress CRpi))%CR.
 (* sin e *)
-Time Eval vm_compute in answer 20 (sin (compress (rational_exp 1)))%CR.
+Time Eval native_compute in answer 20 (sin (compress (rational_exp 1)))%CR.
 (* exp (pi * sqrt(163)) : Takes upt 3 minutes
-Time Eval vm_compute in answer 1 (exp (compress (rational_sqrt 163 * CRpi)))%CR. *)
+Time Eval native_compute in answer 1 (exp (compress (rational_sqrt 163 * CRpi)))%CR. *)
 (* exp (exp (exp (1))) *)
-Time Eval vm_compute in answer 1 (exp (compress (exp (compress (rational_exp 1)))))%CR. 
+Time Eval native_compute in answer 1 (exp (compress (exp (compress (rational_exp 1)))))%CR. 
 
 (* The following expressions are taken from the
   Many Digits friendly competition problem set *)
 (* sqrt (e/pi) *)
-Time Eval vm_compute in answer 20 (CRsqrt (compress (rational_exp (1))*compress (CRinv_pos (3#1) CRpi)))%CR.
+Time Eval native_compute in answer 20 (CRsqrt (compress (rational_exp (1))*compress (CRinv_pos (3#1) CRpi)))%CR.
 (* sin((e+1)^3) *)
-Time Eval vm_compute in answer 20 (sin (compress (CRpower_positive 3 (translate (1#1) (compress (rational_exp (1)))))))%CR.
+Time Eval native_compute in answer 20 (sin (compress (CRpower_positive 3 (translate (1#1) (compress (rational_exp (1)))))))%CR.
 (* sin(10^22) still takes too long, see http://www.derekroconnor.net/DAMQ/FPArithSlidesHO.pdf *)
-Time Eval vm_compute in answer 10 (rational_sin (10^14))%CR.
+Time Eval native_compute in answer 10 (rational_sin (10^14))%CR.
 (* exp (exp (exp (1/2))) *)
-Time Eval vm_compute in answer 10 (exp (compress (exp (compress (rational_exp (1#2))))))%CR.
+Time Eval native_compute in answer 10 (exp (compress (exp (compress (rational_exp (1#2))))))%CR.
 
 Require Import CRsign.
 
@@ -101,7 +101,7 @@ Require Import MultivariatePolynomials.
    using multivariable polynomial library (which only uses one variable
    in this case). *)
 (*
-Time Eval vm_compute in 
+Time Eval native_compute in 
  answer 20 (MVP_uc_fun 1 ((_C_ (4#1))[*]_X_[*](One[-]_X_)) (rational_exp (-1#1))%CR).
 *)
 

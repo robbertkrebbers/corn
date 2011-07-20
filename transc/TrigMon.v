@@ -437,7 +437,7 @@ Proof.
  intros x [Hx0 Hx1].
  apply Tang_Domain.
  intros z.
- destruct (Z_lt_le_dec z 0).
+ destruct (Z_lt_le_dec z 0) as [z0|z0].
   apply Greater_imp_ap.
   eapply leEq_less_trans;[|apply Hx0].
   rstepr ([--]Zero[*]Pi[-]Pi[/]TwoNZ).

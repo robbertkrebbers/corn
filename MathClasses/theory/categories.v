@@ -10,8 +10,8 @@ Definition id_nat_trans `{Arrows D} `{!CatId D} `(F: C → D): F ⇛ F := λ _, 
 
 Section NaturalTransformation.
   Context `{Category C} `{Category D} `{!Functor (F: C → D) Fa} `{!Functor (G: C → D) Ga}.
-  Class NaturalTransformation (η: F ⇛ G): Prop :=
-    natural: ∀ `(f: x ⟶ y), η y ◎ fmap F f = fmap G f ◎ η x.
+  Class NaturalTransformation (eta: F ⇛ G): Prop :=
+    natural: ∀ `(f: x ⟶ y), eta y ◎ fmap F f = fmap G f ◎ eta x.
 End NaturalTransformation.
 
 Section UniversalArrow.
@@ -27,32 +27,32 @@ Section adjunction.
     F `{!Functor (F: C → D) F'}
     G `{!Functor (G: D → C) G'}.
 
-  (* 1. The definition based on φ (MacLane p79): *)
-  Class φAdjunction (φ: ∀ `(F c ⟶ d), (c ⟶ G d)) `{∀ c d, Inverse (@φ c d)}: Prop :=
-    { φ_adjunction_left_functor: Functor F _
-    ; φ_adjunction_right_functor: Functor G _
-    ; φ_adjunction_bijective: ∀ c d, Bijective (@φ c d)
-    ; φ_adjunction_natural_left `(f: F c ⟶ d) `(k: d ⟶ d'): φ (k ◎ f) = fmap G k ◎ φ f
-    ; φ_adjunction_natural_right `(f: F c ⟶ d) `(h: c' ⟶ c): φ (f ◎ fmap F h) = φ f ◎ h }.
+  (* 1. The definition based on phi (MacLane p79): *)
+  Class phiAdjunction (phi: ∀ `(F c ⟶ d), (c ⟶ G d)) `{∀ c d, Inverse (@phi c d)}: Prop :=
+    { phi_adjunction_left_functor: Functor F _
+    ; phi_adjunction_right_functor: Functor G _
+    ; phi_adjunction_bijective: ∀ c d, Bijective (@phi c d)
+    ; phi_adjunction_natural_left `(f: F c ⟶ d) `(k: d ⟶ d'): phi (k ◎ f) = fmap G k ◎ phi f
+    ; phi_adjunction_natural_right `(f: F c ⟶ d) `(h: c' ⟶ c): phi (f ◎ fmap F h) = phi f ◎ h }.
 
-  (* 2. The definition based on a universal η (MacLane p81 Theorem 2 (i)): *)
-  Class ηAdjunction (η: id ⇛ G ∘ F) (uniwit: ∀ `(c ⟶ G d), F c ⟶ d): Prop :=
-    { η_adjunction_left_functor: Functor F _
-    ; η_adjunction_right_functor: Functor G _
-    ; η_adjunction_natural: NaturalTransformation η
-    ; η_adjunction_universal: ∀ c: C, UniversalArrow (η c: c ⟶ G (F c)) (@uniwit c) }.
+  (* 2. The definition based on a universal eta (MacLane p81 Theorem 2 (i)): *)
+  Class etaAdjunction (eta: id ⇛ G ∘ F) (uniwit: ∀ `(c ⟶ G d), F c ⟶ d): Prop :=
+    { eta_adjunction_left_functor: Functor F _
+    ; eta_adjunction_right_functor: Functor G _
+    ; eta_adjunction_natural: NaturalTransformation eta
+    ; eta_adjunction_universal: ∀ c: C, UniversalArrow (eta c: c ⟶ G (F c)) (@uniwit c) }.
 
-  (* We could symmetically define εAdjunction based on universal ε, as
+  (* We could symmetically define epsilonAdjunction based on universal epsilon, as
     in MacLane p81 Theorem 2 (iii), but that would be boring. *)
 
-  (* 3. The definition based on η and ε being inverses (MacLane p81 Theorem 2 (v)): *)
-  Class ηεAdjunction (η: id ⇛ G ∘ F) (ε: F ∘ G ⇛ id): Prop :=
-    { ηε_adjunction_left_functor: Functor F _
-    ; ηε_adjunction_right_functor: Functor G _
-    ; ηε_adjunction_η_natural: NaturalTransformation η
-    ; ηε_adjunction_ε_natural: NaturalTransformation ε
-    ; ηε_adjunction_identity_at_G: ∀ a, fmap G (ε a) ◎ η (G a) = id_nat_trans G a
-    ; ηε_adjunction_identity_at_F: ∀ a, ε (F a) ◎ fmap F (η a) = id_nat_trans F a }.
+  (* 3. The definition based on eta and epsilon being inverses (MacLane p81 Theorem 2 (v)): *)
+  Class etaepsilonAdjunction (eta: id ⇛ G ∘ F) (epsilon: F ∘ G ⇛ id): Prop :=
+    { etaepsilon_adjunction_left_functor: Functor F _
+    ; etaepsilon_adjunction_right_functor: Functor G _
+    ; etaepsilon_adjunction_eta_natural: NaturalTransformation eta
+    ; etaepsilon_adjunction_epsilon_natural: NaturalTransformation epsilon
+    ; etaepsilon_adjunction_identity_at_G: ∀ a, fmap G (epsilon a) ◎ eta (G a) = id_nat_trans G a
+    ; etaepsilon_adjunction_identity_at_F: ∀ a, epsilon (F a) ◎ fmap F (eta a) = id_nat_trans F a }.
 
   (* We currently don't define adjunctions as characterized in MacLane p81 Theorem 2 (ii) and (iv). *)
 End adjunction.
@@ -240,9 +240,9 @@ Lemma freedom_as_adjunction
   `{!Functor (freeF: Base → Extra) free_arr}
   (eta: id ⇛ forget ∘ freeF)
   (phi: ∀ x y, (x ⟶ forget y) → (freeF x ⟶ y))
-  `{!ηAdjunction freeF forget eta phi}:
+  `{!etaAdjunction freeF forget eta phi}:
     ∀ b, proves_free forget b (eta b) (phi b).
-Proof. exact (alt_adjunction_η_universal _ _ _ _). Qed.
+Proof. exact (alt_adjunction_eta_universal _ _ _ _). Qed.
 *)
 
 Implicit Arguments Producer [].

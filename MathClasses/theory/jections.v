@@ -3,6 +3,14 @@ Require Import
   abstract_algebra canonical_names workaround_tactics.
 Require theory.setoids.
 
+Lemma morphism_ne `{Equiv A} `{Equiv B} `(f : A → B) `{!Setoid_Morphism f} x y :
+  f x ≠ f y → x ≠ y.
+Proof. intros E1 E2. apply E1. now apply sm_proper. Qed.
+
+Lemma injective_ne `{Equiv A} `{Equiv B} `(f : A → B) `{Injective A B f} x y :
+  x ≠ y → f x ≠ f y.
+Proof. intros E1 E2. apply E1. now apply (injective f). Qed.
+
 Local Existing Instance injective_mor.
 Local Existing Instance surjective_mor.
 
@@ -12,7 +20,7 @@ Proof. split; try apply _. easy. Qed.
 Section compositions.
   Context `{Equiv A} `{Equiv B} `{Equiv C} (g: A → B) (f: B → C) `{!Inverse f} `{!Inverse g}.
 
-  Global Instance: Inverse (f ∘ g) := g⁻¹ ∘ f⁻¹.
+  Instance inverse_comp: Inverse (f ∘ g) := g⁻¹ ∘ f⁻¹.
 
   Global Instance: Injective f → Injective g → Injective (f ∘ g).
   Proof. firstorder. Qed.
@@ -28,8 +36,9 @@ Section compositions.
   Qed.
 
   Global Instance: Bijective f → Bijective g → Bijective (f ∘ g) := {}.
-
 End compositions.
+
+Hint Extern 6 (Inverse (_ ∘ _)) => eapply @inverse_comp : typeclass_instances.
 
 Lemma back `{Bijective A B f}: f ⁻¹ ∘ f = id. (* a.k.a. "split-mono" *)
 Proof.
@@ -84,7 +93,8 @@ Proof with try tauto; intuition.
  rewrite (surjective f y y)...
 Qed.
 
-Instance: ∀ `{Inverse A B f}, Inverse (f ⁻¹) := λ _ _ f _, f.
+Definition inverse_inverse `{Inverse A B f} : Inverse (f ⁻¹) := f.
+Hint Extern 6 (Inverse (_ ⁻¹)) => eapply @inverse_inverse : typeclass_instances.
 
 Lemma flip_bijection_pseudoinstance: ∀ `{Bijective A B f}, Bijective (f ⁻¹).
 Proof with intuition.
